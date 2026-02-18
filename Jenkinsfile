@@ -5,7 +5,13 @@ pipeline {
     }
     stages {
         stage('Snyk Code Scan') {
-            agent { label 'python-agent' }
+            agent {
+                docker {
+                    image 'snyk/snyk:python'
+                    args '-e SNYK_TOKEN'
+                    reuseNode true
+                }
+            }
             steps {
                 withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
                     sh 'snyk auth $SNYK_TOKEN'
