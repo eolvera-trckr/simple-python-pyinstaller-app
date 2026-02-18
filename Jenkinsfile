@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Deliver') {
             steps {
-                sh 'python3 -m pyinstaller --onefile sources/add2vals.py'
+                sh 'python3 -m PyInstaller --onefile sources/add2vals.py'
             }
             post {
                 success {
