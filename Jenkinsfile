@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'sudo apt install -y python3-pytest'
+                sh 'apt install -y python3-pytest'
                 sh 'python3 -m pytest --junit-xml test-reports/results.xml sources/test_calc.py'
             }
             post {
@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Deliver') {
             steps {
-                sh 'sudo apt install -y python3-pyinstaller'
+                sh 'apt install -y python3-pyinstaller'
                 sh 'pyinstaller --onefile sources/add2vals.py'
             }
             post {
