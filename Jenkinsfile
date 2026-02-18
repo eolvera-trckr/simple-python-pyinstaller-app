@@ -7,7 +7,7 @@ pipeline {
         stage('Snyk Code Scan') {
             agent {
                 docker {
-                    image 'snyk/snyk:python'
+                    image 'snyk/snyk:latest'
                     args '-e SNYK_TOKEN'
                     reuseNode true
                     alwaysPull true
