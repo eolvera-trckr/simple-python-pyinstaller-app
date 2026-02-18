@@ -4,6 +4,20 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
+        stage('Snyk Code Scan') {
+            agent {
+                docker {
+                    image 'snyk/snyk:python'
+                    args '-e SNYK_TOKEN'
+                }
+            }
+            steps {
+                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+                    sh 'snyk auth $SNYK_TOKEN'
+                    sh 'snyk code test --severity-threshold=medium'
+                }
+            }
+        }
         stage('Build') {
             steps {
                 sh 'python3 -m py_compile sources/add2vals.py sources/calc.py'
