@@ -31,7 +31,7 @@ pipeline {
             }
             post {
                 always {
-                    node {
+                    node('built-in') {
                         junit 'test-reports/results.xml'
                     }
                 }
