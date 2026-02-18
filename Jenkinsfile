@@ -8,7 +8,7 @@ pipeline {
             agent {
                 docker {
                     image 'snyk/snyk:latest'
-                    args '-e SNYK_TOKEN'
+                    args '--platform linux/amd64 -e SNYK_TOKEN'
                     reuseNode true
                     alwaysPull true
                 }
