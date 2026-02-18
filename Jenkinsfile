@@ -9,6 +9,7 @@ pipeline {
                 docker {
                     image 'snyk/snyk:python'
                     args '-e SNYK_TOKEN'
+                    reuseNode true
                 }
             }
             steps {
