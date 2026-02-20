@@ -5,7 +5,8 @@ cursor.execute(query)
 
 # 2. Weak Cryptography (SHA-1 is insecure)
 import hashlib
-hashlib.sha1(password.encode()).hexdigest()  # Snyk flags SHA-1
+def hash_password(pwd):
+    return hashlib.sha1(pwd.encode()).hexdigest()  # Snyk flags SHA-1   
 
 # 3. Hardcoded Secret (Snyk detects this)
 API_KEY = "sk-1234567890abcdef"  # Simulate a secret
