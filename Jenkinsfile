@@ -8,7 +8,11 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
                     sh '''
+                    # Authenticate
                     snyk auth $SNYK_TOKEN
+                    # Scan dependencies
+                    snyk test --severity-threshold=medium
+                    # Scan code for security issues
                     snyk code test --severity-threshold=medium
                     '''
                 }
