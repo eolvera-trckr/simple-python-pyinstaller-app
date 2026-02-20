@@ -1,21 +1,16 @@
-# 1. SQL Injection (via string formatting)
+# 1. SQL Injection
 user_input = request.args.get('user')
 query = f"SELECT * FROM users WHERE name = '{user_input}'"
 cursor.execute(query)
 
-# 2. Weak Cryptography (SHA-1 is insecure)
-import hashlib
-def hash_password(pwd):
-    return hashlib.sha1(pwd.encode()).hexdigest()  # Snyk flags SHA-1   
+# 2. Hardcoded Non-Cryptographic Secret
+API_KEY = "sk-1234567890abcdef"
 
-# 3. Hardcoded Secret (Snyk detects this)
-API_KEY = "sk-1234567890abcdef"  # Simulate a secret
-
-# 4. Command Injection (dangerous use of input)
+# 3. Command Injection (dangerous use of input)
 import os
 filename = request.args.get('file')
-os.system(f"cat {filename}")  # User controls system command
+os.system(f"cat {filename}")
 
-# 5. Insecure Deserialization
+# 4. Deserialization of Untrusted Data
 import pickle
-data = pickle.loads(user_input)  # Risk of arbitrary code execution   
+data = pickle.loads(user_input)   
