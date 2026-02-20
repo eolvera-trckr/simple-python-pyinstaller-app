@@ -13,7 +13,7 @@ pipeline {
                     # Scan dependencies
                     #snyk test --all-projects --severity-threshold=medium                    
                     # Scan code for security issues
-                    snyk code test --severity-threshold=medium || true
+                    snyk code test --severity-threshold=medium --report || true
                     '''
                 }
             }
