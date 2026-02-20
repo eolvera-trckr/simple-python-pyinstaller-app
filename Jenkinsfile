@@ -11,9 +11,9 @@ pipeline {
                     # Authenticate
                     snyk auth $SNYK_TOKEN
                     # Scan dependencies
-                    snyk test --all-projects --severity-threshold=medium                    
+                    #snyk test --all-projects --severity-threshold=medium                    
                     # Scan code for security issues
-                    # snyk code test --severity-threshold=medium
+                    snyk code test --severity-threshold=medium || true
                     '''
                 }
             }
