@@ -1,5 +1,8 @@
 pipeline {
     agent { label 'python-agent' }
+    environment {
+        REPO_NAME = "${env.JOB_NAME.split('/')[-1]}"
+    }   
     options {
         skipStagesAfterUnstable()
     }
@@ -13,7 +16,7 @@ pipeline {
                     # Scan dependencies
                     #snyk test --all-projects --severity-threshold=medium                    
                     # Scan code for security issues
-                    snyk code test --severity-threshold=medium --report || true
+                    snyk code test --severity-threshold=medium --report --project-name=$REPO_NAME || true
                     '''
                 }
             }
