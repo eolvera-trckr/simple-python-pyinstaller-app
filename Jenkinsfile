@@ -17,9 +17,11 @@ pipeline {
 */
             steps {
                 withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+                    sh '''
                     curl -L -o snyk https://static.snyk.io/cli/latest/snyk-linux
                     chmod +x snyk
                     sudo mv snyk /usr/local/bin/
+                    '''
                     sh 'snyk auth $SNYK_TOKEN'
                     sh 'snyk code test --severity-threshold=medium'
                 }
