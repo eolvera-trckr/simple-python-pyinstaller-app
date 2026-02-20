@@ -30,7 +30,7 @@ pipeline {
                     # Authenticate
                     snyk auth $SNYK_TOKEN
                     # Scan dependencies
-                    snyk test --all-projects -command=python3 --skip-unresolved --severity-threshold=medium                 
+                    snyk test --all-projects --command=python3 --skip-unresolved --severity-threshold=medium                 
                     # Scan code for security issues
                     #snyk code test --severity-threshold=medium --report --project-name=$REPO_NAME || true
                     '''
