@@ -3,9 +3,9 @@ user_input = request.args.get('user')
 query = f"SELECT * FROM users WHERE name = '{user_input}'"
 cursor.execute(query)
 
-# 2. Weak Cryptography (MD5 is insecure)
+# 2. Weak Cryptography (SHA-1 is insecure)
 import hashlib
-hash = hashlib.md5(password.encode()).hexdigest()  # Snyk flags MD5
+hashlib.sha1(password.encode()).hexdigest()  # Snyk flags SHA-1
 
 # 3. Hardcoded Secret (Snyk detects this)
 API_KEY = "sk-1234567890abcdef"  # Simulate a secret
