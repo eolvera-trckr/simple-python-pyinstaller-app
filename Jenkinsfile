@@ -29,6 +29,8 @@ pipeline {
                     sh '''
                     # Authenticate
                     snyk auth $SNYK_TOKEN
+                    # Install dependencies
+                    pip install -r sources/requirements.txt   
                     # Scan dependencies
                     snyk test --all-projects --command=python3 --severity-threshold=medium                 
                     # Scan code for security issues
