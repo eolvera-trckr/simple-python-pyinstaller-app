@@ -7,20 +7,6 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
-        stage('Snyk Code Scan') {
-            steps {
-                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
-                    sh '''
-                    # Authenticate
-                    snyk auth $SNYK_TOKEN
-                    # Scan dependencies
-                    snyk test --all-projects --severity-threshold=medium || true                   
-                    # Scan code for security issues
-                    #snyk code test --severity-threshold=medium --report --project-name=$REPO_NAME || true
-                    '''
-                }
-            }
-        }
         stage('Build') {
             steps {
                 sh 'python3 -m py_compile sources/add2vals.py sources/calc.py'
@@ -34,6 +20,20 @@ pipeline {
             post {
                 always {
                     junit 'test-reports/results.xml'
+                }
+            }
+        }
+        stage('Snyk Code Scan') {
+            steps {
+                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+                    sh '''
+                    # Authenticate
+                    snyk auth $SNYK_TOKEN
+                    # Scan dependencies
+                    snyk test --all-projects --severity-threshold=medium                 
+                    # Scan code for security issues
+                    #snyk code test --severity-threshold=medium --report --project-name=$REPO_NAME || true
+                    '''
                 }
             }
         }
