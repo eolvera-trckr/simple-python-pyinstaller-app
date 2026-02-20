@@ -5,25 +5,12 @@ pipeline {
     }
     stages {
         stage('Snyk Code Scan') {
-/*
-            agent {
-                docker {
-                    image 'snyk/snyk:python'
-                    args '--platform=linux/amd64 -e SNYK_TOKEN'
-                    reuseNode true
-                    alwaysPull true
-                }
-            }
-*/
             steps {
                 withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
                     sh '''
-                    curl -L -o snyk https://static.snyk.io/cli/latest/snyk-linux
-                    chmod +x snyk
-                    sudo mv snyk /usr/local/bin/
+                    snyk auth $SNYK_TOKEN
+                    snyk code test --severity-threshold=medium
                     '''
-                    sh 'snyk auth $SNYK_TOKEN'
-                    sh 'snyk code test --severity-threshold=medium'
                 }
             }
         }
