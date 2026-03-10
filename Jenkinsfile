@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        kubernetes {
-            yamlFile 'k8s-build-pod.yml'
-        }
-    }
+    agent { label 'python-agent' }
     environment {
         REPO_NAME = "${env.JOB_NAME.split('/')[-1]}"
     }
@@ -13,17 +9,13 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                container('python') {
-                    sh 'python3 -m py_compile sources/add2vals.py sources/calc.py'
-                    stash(name: 'compiled-results', includes: 'sources/*.py*')
-                }
+                sh 'python3 -m py_compile sources/add2vals.py sources/calc.py'
+                stash(name: 'compiled-results', includes: 'sources/*.py*')
             }
         }
         stage('Test') {
             steps {
-                container('python') {
-                    sh 'python3 -m pytest --junit-xml test-reports/results.xml sources/test_calc.py'
-                }
+                sh 'python3 -m pytest --junit-xml test-reports/results.xml sources/test_calc.py'
             }
             post {
                 always {
@@ -32,24 +24,26 @@ pipeline {
             }
         }
         stage('Snyk Code Scan') {
+            agent {
+                docker {
+                    image 'snyk/snyk:alpine'
+                    args '--entrypoint=""'
+                }
+            }
             steps {
-                container('snyk') {
-                    withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
-                        sh '''
-                        # Authenticate
-                        snyk auth $SNYK_TOKEN
-                        # Scan dependencies
-                        snyk test --all-projects --skip-unresolved --severity-threshold=medium || true
-                        '''
-                    }
+                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+                    sh '''
+                    # Authenticate
+                    snyk auth $SNYK_TOKEN
+                    # Scan dependencies
+                    snyk test --all-projects --skip-unresolved --severity-threshold=medium || true
+                    '''
                 }
             }
         }
         stage('Deliver') {
             steps {
-                container('python') {
-                    sh 'python3 -m PyInstaller --onefile sources/add2vals.py'
-                }
+                sh 'python3 -m PyInstaller --onefile sources/add2vals.py'
             }
             post {
                 success {
